@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ゲーム</title>
+  <style>
+    #output {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      white-space: pre-wrap;
+    }
+
+    #input {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>ゲーム</h1>
+  <pre id="output"></pre>
+  <input type="text" id="input" placeholder="答えを入力してください">
+  <button id="submit-btn">答えを確認</button>
+
+  <script>
+    document.getElementById('submit-btn').addEventListener('click', function() {
+      var inn = parseInt(prompt("Enter 'n':"), 10);
+      var output = document.getElementById('output');
+      var input = document.getElementById('input').value;
+
+      var modResult = "(" + Math.pow(5, inn) + "," + Math.pow(2, inn) + ")";
+      output.textContent = "mod(n,m) = " + modResult + "\n";
+
+      var rand = Math.floor(Math.random() * (Math.pow(5, inn) * Math.pow(2, inn)));
+      var a = rand % Math.pow(5, inn);
+      var b = rand % Math.pow(2, inn);
+      output.textContent += a + " " + b + "\n";
+
+      var m = parseInt(input, 10);
+      if (m === rand) {
+        output.textContent += "正解！";
+      } else {
+        output.textContent += "不正解 :-(";
+        output.textContent += "\n" + rand;
+      }
+    });
+  </script>
+</body>
+</html>
