@@ -1,9 +1,10 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>CRT Calc</title>
+  <title>CRT Game</title>
 </head>
 <body>
-  <h1>CRT Calc</h1>
+  <h1>CRT Game</h1>
 
   <p>
     x ≡ a (mod p)<br>
@@ -12,7 +13,7 @@
     なお、a,bはそれぞれ5のn乗,2のn乗です。
   </p>
 
-  <form onsubmit="return generateCRT(event)">
+  <form onsubmit="return generateRandomX(event)">
     <p>
       ↓nの値を選択<br>
       <input type="radio" id="inq2" name="num_of_inq" value="2" required><label for="inq2">2</label><br>
@@ -20,12 +21,12 @@
       <input type="radio" id="inq4" name="num_of_inq" value="4"><label for="inq4">4</label><br>
       <input type="radio" id="inq5" name="num_of_inq" value="5"><label for="inq5">5</label>
     </p>
-    <button type="submit">生成</button>
+    <button type="submit">generate</button>
   </form>
 
   <form onsubmit="return checkAnswer(event)">
     <input type="number" id="answer-input" name="number" placeholder="xの値を入力してください" required>
-    <button type="submit">確認</button>
+    <button type="submit">ans</button>
   </form>
 
   <div id="output"></div>
@@ -35,9 +36,10 @@
     var modQ;
     var a;
     var b;
+    var x;
     var n;
 
-    function generateCRT(event) {
+    function generateRandomX(event) {
       event.preventDefault();
 
       var num_of_inq = document.querySelector('input[name="num_of_inq"]:checked');
@@ -45,8 +47,9 @@
       modP = Math.pow(5, n);
       modQ = Math.pow(2, n);
 
-      a = getRandomNumber(modP);
-      b = getRandomNumber(modQ);
+      x = getRandomNumber(modP * modQ);
+      a = x % modP;
+      b = x % modQ;
 
       document.getElementById('output').innerHTML = `mod(n,m) = (${modP},${modQ})<br>`;
       document.getElementById('output').innerHTML += `${a} ${b}<br>`;
@@ -58,51 +61,20 @@
       event.preventDefault();
 
       var answer = parseInt(document.getElementById('answer-input').value, 10);
-
-      var x = solveCRT(a, b, modP, modQ);
       var output = document.getElementById('output');
 
       if (answer === x) {
-        output.innerHTML += '正解！';
+        output.innerHTML += 'correct！';
       } else {
-        output.innerHTML += '不正解 :-(';
-        output.innerHTML += `<br>${x}`;
+        output.innerHTML += ':-(';
+        output.innerHTML += `<br>answer is ${x} `;
       }
 
       return false;
     }
 
-    function getRandomNumber(modulus) {
-      return Math.floor(Math.random() * modulus);
-    }
-
-    function solveCRT(a, b, p, q) {
-      var m1 = q;
-      var m2 = p;
-      var y1 = 0;
-      var y2 = 1;
-      var x1 = 1;
-      var x2 = 0;
-
-      while (p !== 1) {
-        var quotient = Math.floor(q / p);
-        var remainder = q % p;
-        var m = x2 - quotient * x1;
-        var n = y2 - quotient * y1;
-        q = p;
-        p = remainder;
-        x2 = x1;
-        x1 = m;
-        y2 = y1;
-        y1 = n;
-      }
-
-      if (x1 < 0) {
-        x1 += m2;
-      }
-
-      var result = (a * x1 * m1 + b * y1 * m2) % (m1 * m2);
-      return result;
+    function getRandomNumber(max) {
+      return Math.floor(Math.random() * max);
     }
   </script>
 </body>
