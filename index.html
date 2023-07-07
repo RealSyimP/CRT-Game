@@ -23,7 +23,7 @@
     }
 
     input[type="number"] {
-      width: 100%;
+      width: 98.35%;
       padding: 10px;
       font-size: 16px;
       border-radius: 4px;
@@ -68,12 +68,15 @@
     <button type="submit">generate</button>
   </form>
 
+  <div id="output"></div>
+  <br>
+
   <form onsubmit="return checkAnswer(event)">
-    <input type="number" id="answer-input" name="number" placeholder="xの値を入力してください" required>
+    <input type="number" id="answer-input" name="number" placeholder="Enter x" required>
     <button type="submit">ans</button>
   </form>
 
-  <div id="output"></div>
+  
 
   <script type="text/javascript">
     var modP;
