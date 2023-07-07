@@ -1,53 +1,109 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ゲーム</title>
-  <style>
-    #output {
-      width: 100%;
-      height: 300px;
-      border: 1px solid #ccc;
-      padding: 10px;
-      white-space: pre-wrap;
-    }
-  </style>
+  <title>CRT Calc</title>
 </head>
 <body>
-  <h1>ゲーム</h1>
-  
-  <form onsubmit="return runGame(event)">
-    <label for="n-input">nの値:</label>
-    <input type="number" id="n-input" required>
-    <br>
-    <button type="submit">ゲームを開始</button>
-  </form>
-  
-  <pre id="output"></pre>
+  <h1>CRT Calc</h1>
 
-  <script>
-    function runGame(event) {
+  <p>
+    x ≡ a (mod p)<br>
+    x ≡ b (mod q)<br>
+    について、a,bが与えられるのでxを求めてください。<br>
+    なお、a,bはそれぞれ5のn乗,2のn乗です。
+  </p>
+
+  <form onsubmit="return generateCRT(event)">
+    <p>
+      ↓nの値を選択<br>
+      <input type="radio" id="inq2" name="num_of_inq" value="2" required><label for="inq2">2</label><br>
+      <input type="radio" id="inq3" name="num_of_inq" value="3"><label for="inq3">3</label><br>
+      <input type="radio" id="inq4" name="num_of_inq" value="4"><label for="inq4">4</label><br>
+      <input type="radio" id="inq5" name="num_of_inq" value="5"><label for="inq5">5</label>
+    </p>
+    <button type="submit">生成</button>
+  </form>
+
+  <form onsubmit="return checkAnswer(event)">
+    <input type="number" id="answer-input" name="number" placeholder="xの値を入力してください" required>
+    <button type="submit">確認</button>
+  </form>
+
+  <div id="output"></div>
+
+  <script type="text/javascript">
+    var modP;
+    var modQ;
+    var a;
+    var b;
+    var n;
+
+    function generateCRT(event) {
       event.preventDefault();
 
-      var inn = parseInt(document.getElementById('n-input').value, 10);
+      var num_of_inq = document.querySelector('input[name="num_of_inq"]:checked');
+      n = parseInt(num_of_inq.value, 10);
+      modP = Math.pow(5, n);
+      modQ = Math.pow(2, n);
+
+      a = getRandomNumber(modP);
+      b = getRandomNumber(modQ);
+
+      document.getElementById('output').innerHTML = `mod(n,m) = (${modP},${modQ})<br>`;
+      document.getElementById('output').innerHTML += `${a} ${b}<br>`;
+
+      return false;
+    }
+
+    function checkAnswer(event) {
+      event.preventDefault();
+
+      var answer = parseInt(document.getElementById('answer-input').value, 10);
+
+      var x = solveCRT(a, b, modP, modQ);
       var output = document.getElementById('output');
 
-      var modResult = "(" + Math.pow(5, inn) + "," + Math.pow(2, inn) + ")";
-      output.textContent = "mod(n,m) = " + modResult + "\n";
-
-      var rand = Math.floor(Math.random() * (Math.pow(5, inn) * Math.pow(2, inn)));
-      var a = rand % Math.pow(5, inn);
-      var b = rand % Math.pow(2, inn);
-      output.textContent += a + " " + b + "\n";
-
-      var m = parseInt(prompt("ans : "), 10);
-      if (m === rand) {
-        output.textContent += "正解！";
+      if (answer === x) {
+        output.innerHTML += '正解！';
       } else {
-        output.textContent += "不正解 :-(";
-        output.textContent += "\n" + rand;
+        output.innerHTML += '不正解 :-(';
+        output.innerHTML += `<br>${x}`;
       }
 
       return false;
+    }
+
+    function getRandomNumber(modulus) {
+      return Math.floor(Math.random() * modulus);
+    }
+
+    function solveCRT(a, b, p, q) {
+      var m1 = q;
+      var m2 = p;
+      var y1 = 0;
+      var y2 = 1;
+      var x1 = 1;
+      var x2 = 0;
+
+      while (p !== 1) {
+        var quotient = Math.floor(q / p);
+        var remainder = q % p;
+        var m = x2 - quotient * x1;
+        var n = y2 - quotient * y1;
+        q = p;
+        p = remainder;
+        x2 = x1;
+        x1 = m;
+        y2 = y1;
+        y1 = n;
+      }
+
+      if (x1 < 0) {
+        x1 += m2;
+      }
+
+      var result = (a * x1 * m1 + b * y1 * m2) % (m1 * m2);
+      return result;
     }
   </script>
 </body>
