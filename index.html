@@ -108,7 +108,6 @@
       event.preventDefault();
 
       var answer = parseInt(document.getElementById('answer-input').value, 10);
-      document.innerHTML += '';
       var output = document.getElementById('output');
 
       if (answer === x) {
@@ -117,7 +116,9 @@
         output.innerHTML += ':-(';
         output.innerHTML += `<br>answer is ${x} `;
       }
-
+      
+        answer.value += '';
+      
       return false;
     }
 
