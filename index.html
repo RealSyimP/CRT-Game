@@ -117,10 +117,6 @@
       return false;
     }
 
-    const sleep = (ms) => {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
     function checkAnswer(event) {
       event.preventDefault();
 
@@ -130,6 +126,7 @@
       if (answer === x) {
         output.innerHTML += 'correct！';
         setTimeout(() => {generateRandomX(event);},500);
+        
       } else {
         output.innerHTML += ':-(';
         output.innerHTML += `<br>answer is ${x} `;
