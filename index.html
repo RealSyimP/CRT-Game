@@ -5,45 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
     }
 
     h1 {
-      text-align: center;
+        text-align: center;
     }
 
     p {
-      margin-bottom: 20px;
+        margin-bottom: 20px;
     }
 
     form {
-      margin-bottom: 20px;
+        margin-bottom: 20px;
     }
 
     input[type="number"] {
-      width: 98.35%;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+        width: calc(100% - 21px);
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
     }
 
     button[type="submit"] {
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 4px;
-      border: none;
-      background-color: #4caf50;
-      color: white;
-      cursor: pointer;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: none;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
     }
 
     #output {
-      border: 1px solid #ccc;
-      padding: 10px;
-      white-space: pre-wrap;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        height: 94px;
+        overflow-y: auto;
+    }
+
+    .button-container {
+        margin-top: 10px;
+    }
+
+    #anan {
+        margin-left: 5px;
     }
   </style>
 </head>
@@ -57,7 +68,7 @@
     なお、a,bはそれぞれ5のn乗,2のn乗です。
   </p>
 
-  <form onsubmit="return generateRandomX(event)">
+  <form id="check-answer-form" onsubmit="return generateRandomX(event)">
     <p>
       ↓nの値を選択<br>
       <input type="radio" id="inq2" name="num_of_inq" value="2" required><label for="inq2">2</label><br>
@@ -65,18 +76,20 @@
       <input type="radio" id="inq4" name="num_of_inq" value="4"><label for="inq4">4</label><br>
       <input type="radio" id="inq5" name="num_of_inq" value="5"><label for="inq5">5</label>
     </p>
-    <button type="submit">generate</button>
-  </form>
 
-  <div id="output"></div>
-  <br>
+    <div id="output"></div>
+  </form>
 
   <form onsubmit="return checkAnswer(event)">
     <input type="number" id="answer-input" name="number" placeholder="Enter x" required>
-    <button type="submit">ans</button>
-  </form>
 
-  
+    
+    <div class="button-container">
+        
+        <button type="submit" form="check-answer-form">generate</button>
+        <button type="submit" id="anan">ans</button>
+      </div>
+    </form>
 
   <script type="text/javascript">
     var modP;
@@ -116,9 +129,9 @@
         output.innerHTML += ':-(';
         output.innerHTML += `<br>answer is ${x} `;
       }
-        var dlans = document.getElementById('answer-input')
-        dlans.value = '';
-      
+
+      document.getElementById('answer-input').value = '';
+
       return false;
     }
 
